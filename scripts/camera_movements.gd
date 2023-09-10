@@ -1,4 +1,4 @@
-class_name FreeLookCamera extends Camera3D
+class_name FreeLookCamera extends Node3D
 
 # Modifier keys' speed multiplier
 const SHIFT_MULTIPLIER = 2.5
@@ -16,7 +16,7 @@ var _direction = Vector3(0.0, 0.0, 0.0)
 var _velocity = Vector3(0.0, 0.0, 0.0)
 var _acceleration = 30
 var _deceleration = -10
-var _vel_multiplier = 4
+var _vel_multiplier = 8
 
 # Keyboard state
 var _w = false
@@ -98,8 +98,6 @@ func _update_movement(delta):
 		_velocity.z = clamp(_velocity.z + offset.z, -_vel_multiplier, _vel_multiplier)
 	
 		translate(_velocity * delta * speed_multi)
-		
-	get_parent_node_3d().position = position
 
 # Updates mouse look 
 func _update_mouselook():

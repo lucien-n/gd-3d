@@ -7,4 +7,5 @@
 
 [node name="world" parent="." instance=ExtResource("1_phrv0")]
 
-[node name="ui" parent="." instance=ExtResource("2_eftad")]
+[node name="ui" parent="." node_paths=PackedStringArray("world") instance=ExtResource("2_eftad")]
+world = NodePath("../world")

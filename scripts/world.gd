@@ -1,24 +1,21 @@
 class_name World extends Node3D
 
-signal s_generate_chunk(x, z)
+signal s_generate_chunk(position: Vector3)
 
 @onready var player = $player
 @onready var generator = $generator
 
-func _ready():
-	pass
-
 func _process(delta):
-	var player_chunk_pos = position_to_chunk(Vector2(player.position.x, player.position.y))
-	
-	for chunk in generator.get_children():
-		chunk.visible = chunk.position == Vector3(player_chunk_pos.x, 0, player_chunk_pos.y)
-		s_generate_chunk.emit(player_chunk_pos)
+	var player_chunk_pos = world_to_chunk_position(player.position)
+	#for chunk in generator.get_children():
+	#	chunk.visible = chunk.position == player_chunk_pos
+	s_generate_chunk.emit(player_chunk_pos)
 
-func position_to_chunk(position: Vector2) -> Vector2:
-	var x = floor(position.x / generator.CHUNK_SIZE)
-	var z = floor(position.y / generator.CHUNK_SIZE)
-	return Vector2(x, z)
+func world_to_chunk_position(position: Vector3) -> Vector3:
+	return Vector3(floor(position.x / generator.CHUNK_SIZE), 0, floor(position.z / generator.CHUNK_SIZE))
+
+func chunk_to_world_position(position: Vector3) -> Vector3:
+	return Vector3(position.x * generator.CHUNK_SIZE, 0, position.z * generator.CHUNK_SIZE)
 	
 func round_to_multiple(x, multiple) -> float:
-	return floor(x / multiple) * multiple
+	return round(x / multiple) * multiple

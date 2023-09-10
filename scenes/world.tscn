@@ -12,8 +12,7 @@ script = ExtResource("1_ktrol")
 [node name="sun" type="DirectionalLight3D" parent="."]
 transform = Transform3D(0.683013, 0.258819, -0.683013, 0.00623603, 0.933013, 0.359789, 0.73038, -0.25, 0.635646, -3, 3, 3)
 
-[node name="generator" type="Node" parent="."]
+[node name="generator" type="Node2D" parent="."]
 script = ExtResource("3_qxo2p")
 
 [connection signal="s_generate_chunk" from="." to="generator" method="_on_world_s_generate_chunk"]
-[connection signal="s_generate_chunk" from="generator" to="generator" method="_on_s_generate_chunk"]

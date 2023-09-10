@@ -1,29 +1,28 @@
-class_name Generator extends Node
+class_name Generator extends Node2D
 
 @onready var box = preload("res://scenes/box.tscn")
 @onready var chunks = $chunks
 
-signal s_generate_chunk(x, z)
+signal s_generate_chunk(position: Vector3)
 
 const CHUNK_SIZE: int = 16
 const PREGEN_CHUNK_QUANTITY: int = 2
 
-var CHUNKS: Array[Vector2] = []
+var CHUNKS: Array[Vector3] = []
 
 var noise = FastNoiseLite.new()
 	
-func _ready():	
-	for x in range(PREGEN_CHUNK_QUANTITY):
-		for z in range(PREGEN_CHUNK_QUANTITY):
-			generate_chunk(Vector2(x, z))
-
-func generate_chunk(chunk_pos: Vector2):
+func generate_chunk(chunk_pos: Vector3):
+	var position = Vector3(chunk_pos.x * CHUNK_SIZE, 0, chunk_pos.z * CHUNK_SIZE)
 	if (CHUNKS.has(chunk_pos)): return
+	print("Generating chunk: ", position, " || world: ", chunk_pos)
 	
 	var chunk = StaticBody3D.new()
-	var abs_z = chunk_pos.y * CHUNK_SIZE
-	var abs_x = chunk_pos.x * CHUNK_SIZE
-	chunk.position = Vector3(chunk_pos.x * CHUNK_SIZE, 0, chunk_pos.y * CHUNK_SIZE)
+	chunk.position = position
+	
+	var abs_x = position.x
+	var abs_z = position.z
+	
 	for x in range(CHUNK_SIZE):
 		for z in range(CHUNK_SIZE):
 			var new_box = box.instantiate()
@@ -31,8 +30,10 @@ func generate_chunk(chunk_pos: Vector2):
 			y = floor(y * 10)
 			new_box.position = Vector3(x, y, z)
 			chunk.add_child(new_box)
+	print("Generated: ", chunk.position)
+	print('='.repeat(24))
 	add_child(chunk)
 	CHUNKS.append(chunk_pos)
 
-func _on_world_s_generate_chunk(pos: Vector2):
-	generate_chunk(pos)
+func _on_world_s_generate_chunk(position: Vector3):
+	generate_chunk(position)
