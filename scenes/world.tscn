@@ -1,20 +1,19 @@
 [gd_scene load_steps=4 format=3 uid="uid://6e6exlvcpkdm"]
 
-[ext_resource type="Script" path="res://scripts/world.gd" id="1_2epu6"]
-[ext_resource type="PackedScene" uid="uid://tpcna22ofgjd" path="res://scenes/ui.tscn" id="2_8i5qo"]
-[ext_resource type="Script" path="res://scripts/camera.gd" id="2_m4o1w"]
+[ext_resource type="Script" path="res://scripts/world.gd" id="1_ktrol"]
+[ext_resource type="PackedScene" uid="uid://grw6e8wdmwfh" path="res://scenes/player.tscn" id="2_2eecf"]
+[ext_resource type="Script" path="res://scripts/generator.gd" id="3_qxo2p"]
 
 [node name="world" type="Node3D"]
-script = ExtResource("1_2epu6")
+script = ExtResource("1_ktrol")
 
-[node name="camera" type="Camera3D" parent="."]
-transform = Transform3D(0.707107, -0.5, 0.5, 0, 0.707107, 0.707107, -0.707107, -0.5, 0.5, 5, 5, 5)
-current = true
-script = ExtResource("2_m4o1w")
+[node name="player" parent="." instance=ExtResource("2_2eecf")]
 
-[node name="ui" parent="." instance=ExtResource("2_8i5qo")]
-
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+[node name="sun" type="DirectionalLight3D" parent="."]
 transform = Transform3D(0.683013, 0.258819, -0.683013, 0.00623603, 0.933013, 0.359789, 0.73038, -0.25, 0.635646, -3, 3, 3)
 
-[node name="box_manager" type="Node" parent="."]
+[node name="generator" type="Node" parent="."]
+script = ExtResource("3_qxo2p")
+
+[connection signal="s_generate_chunk" from="." to="generator" method="_on_world_s_generate_chunk"]
+[connection signal="s_generate_chunk" from="generator" to="generator" method="_on_s_generate_chunk"]

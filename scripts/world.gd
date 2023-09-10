@@ -1,20 +1,24 @@
-extends Node3D
+class_name World extends Node3D
 
-@onready var box = preload("res://scenes/box.tscn")
-@onready var box_manager = $box_manager
+signal s_generate_chunk(x, z)
 
-const SIZE: int = 8
+@onready var player = $player
+@onready var generator = $generator
 
 func _ready():
-	for x in range(SIZE):
-		x -= SIZE / 2
-		for y in range(SIZE):
-			y -= SIZE / 2
-			for z in range(SIZE):
-				var new_box = box.instantiate()
-				var position = Vector3(x, -z, y)
-				new_box.position = position
-				box_manager.add_child(new_box)
+	pass
 
 func _process(delta):
-	pass
+	var player_chunk_pos = position_to_chunk(Vector2(player.position.x, player.position.y))
+	
+	for chunk in generator.get_children():
+		chunk.visible = chunk.position == Vector3(player_chunk_pos.x, 0, player_chunk_pos.y)
+		s_generate_chunk.emit(player_chunk_pos)
+
+func position_to_chunk(position: Vector2) -> Vector2:
+	var x = floor(position.x / generator.CHUNK_SIZE)
+	var z = floor(position.y / generator.CHUNK_SIZE)
+	return Vector2(x, z)
+	
+func round_to_multiple(x, multiple) -> float:
+	return floor(x / multiple) * multiple
