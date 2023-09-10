@@ -13,15 +13,15 @@ var CHUNKS: Array[Vector3] = []
 var noise = FastNoiseLite.new()
 	
 func generate_chunk(chunk_pos: Vector3):
-	var position = Vector3(chunk_pos.x * CHUNK_SIZE, 0, chunk_pos.z * CHUNK_SIZE)
+	var chunk_world_pos = Vector3(chunk_pos.x * CHUNK_SIZE, 0, chunk_pos.z * CHUNK_SIZE)
 	if (CHUNKS.has(chunk_pos)): return
-	print("Generating chunk: ", position, " || world: ", chunk_pos)
+	print("Generating chunk: ", chunk_world_pos, " || world: ", chunk_pos)
 	
 	var chunk = StaticBody3D.new()
-	chunk.position = position
+	chunk.position = chunk_world_pos
 	
-	var abs_x = position.x
-	var abs_z = position.z
+	var abs_x = chunk.position.x
+	var abs_z = chunk.position.z
 	
 	for x in range(CHUNK_SIZE):
 		for z in range(CHUNK_SIZE):
