@@ -4,15 +4,15 @@
 [ext_resource type="PackedScene" uid="uid://grw6e8wdmwfh" path="res://scenes/player.tscn" id="2_2eecf"]
 [ext_resource type="Script" path="res://scripts/generator.gd" id="3_qxo2p"]
 
-[node name="world" type="Node3D"]
+[node name="world" type="Node3D" node_paths=PackedStringArray("player")]
 script = ExtResource("1_ktrol")
+player = NodePath("player")
 
 [node name="player" parent="." instance=ExtResource("2_2eecf")]
 
 [node name="sun" type="DirectionalLight3D" parent="."]
 transform = Transform3D(0.683013, 0.258819, -0.683013, 0.00623603, 0.933013, 0.359789, 0.73038, -0.25, 0.635646, -3, 3, 3)
 
-[node name="generator" type="Node2D" parent="."]
+[node name="generator" type="Node2D" parent="." node_paths=PackedStringArray("player")]
 script = ExtResource("3_qxo2p")
-
-[connection signal="s_generate_chunk" from="." to="generator" method="_on_world_s_generate_chunk"]
+player = NodePath("../player")

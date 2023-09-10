@@ -1,4 +1,4 @@
-class_name FreeLookCamera extends Node3D
+class_name Player extends Node3D
 
 # Modifier keys' speed multiplier
 const SHIFT_MULTIPLIER = 2.5
