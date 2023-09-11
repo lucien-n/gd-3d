@@ -1,11 +1,12 @@
 using System;
+using System.Collections.Generic;
 using Godot;
 
 public partial class Global : Node
 {
 
-    public const float CHUNK_SIZE = 16;
-    public const float RENDER_DISTANCE = 2;
+    public const int CHUNK_SIZE = 16;
+    public const int RENDER_DISTANCE = 4;
 
     public static Vector3 WorldToChunkCoordinates(Vector3 world_position)
     {

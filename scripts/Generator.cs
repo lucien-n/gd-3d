@@ -8,16 +8,9 @@ public partial class Generator : Node
     [Export]
     private Node3D _player;
 
-    private PackedScene _voxel_scene;
-
     private Dictionary<Vector3, StaticBody3D> chunks = new();
     private List<Vector3> unready_chunks = new();
     private readonly FastNoiseLite noise = new();
-
-    public override void _Ready()
-    {
-        _voxel_scene = GD.Load<PackedScene>("res://scenes/voxel.tscn");
-    }
 
     public override void _Process(double delta)
     {

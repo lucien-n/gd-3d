@@ -21,3 +21,9 @@ layout_mode = 2
 
 [node name="player_pos" type="Label" parent="debug"]
 layout_mode = 2
+
+[node name="vp_drawing_mode" type="Label" parent="debug"]
+layout_mode = 2
+
+[node name="camera" type="Label" parent="debug"]
+layout_mode = 2
