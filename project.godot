@@ -18,7 +18,6 @@ config/icon="res://icon.svg"
 [autoload]
 
 Global="*res://scripts/Global.cs"
-Global_GD="*res://scripts/global.gd"
 
 [display]
 

@@ -44,24 +44,13 @@ public partial class Generator : Node
         return render_chunks;
     }
 
-    private bool IsChunkInRenderDistance(Vector3 chunk_position, Vector3 center_position)
-    {
-        float double_render_distance = Global.RENDER_DISTANCE * 2;
-
-        bool is_in_render_distance = chunk_position.X > (center_position.X - double_render_distance)
-                                  && chunk_position.X < (center_position.X + double_render_distance)
-                                  && chunk_position.Z > (center_position.Z - double_render_distance)
-                                  && chunk_position.Z < (center_position.Z + double_render_distance);
-
-        return is_in_render_distance;
-    }
-
     private async void UpdateChunks()
     {
         Vector3 player_chunk_position = Global.WorldToChunkCoordinates(_player.Position);
         List<Vector3> render_chunks = GetChunksInRenderDistance(player_chunk_position);
 
         List<StaticBody3D> ready_chunks = new();
+
         Task chunk_generation = Task.Run(() =>
         {
             foreach (Vector3 chunk_position in render_chunks)
@@ -80,18 +69,12 @@ public partial class Generator : Node
         {
             AddChild(chunk);
         }
-
-
-
-        foreach (Vector3 chunk_position in chunks.Keys)
-        {
-            chunks[chunk_position].Visible = IsChunkInRenderDistance(chunk_position, player_chunk_position);
-        }
     }
 
     private StaticBody3D GenerateChunk(Vector3 chunk_position)
     {
         StaticBody3D chunk = Chunk.GenerateChunk(chunk_position, noise);
+
 
         chunks.Add(chunk_position, chunk);
         unready_chunks.Remove(chunk_position);
