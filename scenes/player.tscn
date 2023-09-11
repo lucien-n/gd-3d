@@ -1,10 +1,8 @@
-[gd_scene load_steps=4 format=3 uid="uid://grw6e8wdmwfh"]
+[gd_scene load_steps=3 format=3 uid="uid://grw6e8wdmwfh"]
 
 [ext_resource type="Script" path="res://scripts/camera_movements.gd" id="1_sktpn"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_8j86r"]
-
-[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_o46mo"]
 
 [node name="player" type="Node3D"]
 script = ExtResource("1_sktpn")
@@ -12,10 +10,5 @@ script = ExtResource("1_sktpn")
 [node name="mesh" type="MeshInstance3D" parent="."]
 visible = false
 mesh = SubResource("CapsuleMesh_8j86r")
-
-[node name="rigid_body" type="RigidBody3D" parent="."]
-
-[node name="collision_shape" type="CollisionShape3D" parent="rigid_body"]
-shape = SubResource("CapsuleShape3D_o46mo")
 
 [node name="camera" type="Camera3D" parent="."]

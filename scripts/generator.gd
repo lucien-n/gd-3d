@@ -1,11 +1,11 @@
 class_name Generator extends Node2D
 
-@onready var box = preload("res://scenes/box.tscn")
+@onready var box = preload("res://scenes/voxel.tscn")
 @export var player: Player
 
-const CHUNK_SIZE: int = Global.CHUNK_SIZE
-const RENDER_DISTANCE: int = Global.RENDER_DISTANCE 
-
+const CHUNK_SIZE: int = 16
+const RENDER_DISTANCE: int = 2
+	
 var chunks: Dictionary = {}
 var unready_chunks: Dictionary = {}
 
@@ -17,7 +17,7 @@ func _process(_delta):
 	
 func update_chunks():
 	var render_chunks: Array[Vector3] = []
-	var player_chunk_pos = Global.world_to_chunk_position(player.position)
+	var player_chunk_pos = world_to_chunk_position(player.position)
 	
 	for x in range((RENDER_DISTANCE * 2) + 1):
 		for z in range((RENDER_DISTANCE * 2) + 1):
@@ -58,3 +58,6 @@ func finish_chunk(chunk, chunk_pos: Vector3):
 	unready_chunks.erase(chunk_pos)
 	
 	if (thread.is_started()): thread.wait_to_finish()
+	
+func world_to_chunk_position(position: Vector3) -> Vector3:
+	return Vector3(floor(position.x / CHUNK_SIZE), 0, floor(position.z / CHUNK_SIZE))

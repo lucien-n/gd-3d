@@ -1,0 +1,23 @@
+[gd_scene load_steps=5 format=3 uid="uid://d4lrhnot4vxk7"]
+
+[ext_resource type="Script" path="res://scripts/Voxel.cs" id="1_fetw8"]
+[ext_resource type="Material" uid="uid://dseefmxceau1l" path="res://materials/base.tres" id="2_h2ban"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_8m2by"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ehd5n"]
+
+[node name="voxel" type="Node3D"]
+script = ExtResource("1_fetw8")
+
+[node name="mesh" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_8m2by")
+surface_material_override/0 = ExtResource("2_h2ban")
+
+[node name="area" type="Area3D" parent="."]
+
+[node name="collision_shape" type="CollisionShape3D" parent="area"]
+shape = SubResource("BoxShape3D_ehd5n")
+
+[connection signal="mouse_entered" from="area" to="." method="OnAreaMouseEntered"]
+[connection signal="mouse_exited" from="area" to="." method="OnAreaMouseExited"]
