@@ -12,6 +12,7 @@ public partial class Generator : Node
     private List<Vector3> unready_chunks = new();
     private readonly FastNoiseLite noise = new();
 
+
     public override void _Process(double delta)
     {
         UpdateChunks();
@@ -20,15 +21,17 @@ public partial class Generator : Node
     private List<Vector3> GetChunksInRenderDistance(Vector3 from)
     {
         List<Vector3> render_chunks = new();
+        const int RENDER_DISTANCE = Global.RENDER_DISTANCE;
+        const int GRID_SIZE = RENDER_DISTANCE * 2 + 1;
 
-        for (int x = 0; x < Global.RENDER_DISTANCE * 2 + 1; x++)
+        for (int x = 0; x < GRID_SIZE; x++)
         {
-            for (int z = 0; z < Global.RENDER_DISTANCE * 2 + 1; z++)
+            for (int z = 0; z < GRID_SIZE; z++)
             {
                 Vector3 position = new(
-                    from.X + x - Global.RENDER_DISTANCE,
+                    from.X + x - RENDER_DISTANCE,
                     0,
-                    from.Z + z - Global.RENDER_DISTANCE
+                    from.Z + z - RENDER_DISTANCE
                 );
                 render_chunks.Add(position);
             }
@@ -58,6 +61,7 @@ public partial class Generator : Node
         });
 
         await chunk_generation;
+
         foreach (StaticBody3D chunk in ready_chunks)
         {
             AddChild(chunk);

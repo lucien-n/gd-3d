@@ -7,11 +7,11 @@ public partial class Chunk : StaticBody3D
     public static StaticBody3D GenerateChunk(Vector3 chunk_position, FastNoiseLite noise)
     {
         StaticBody3D chunk = new();
+
         Vector3 chunk_world_position = Global.ChunkToWorldCoordinates(chunk_position);
         chunk.Position = new Vector3(chunk_world_position.X, 0, chunk_world_position.Z);
 
         List<Vector3> voxels_positions = GenerateVoxelsPositions(chunk_world_position, noise);
-        // List<Node3D> voxels = GenerateVoxels(voxels_positions);
 
         MeshInstance3D mesh = ConstructMesh(voxels_positions);
 

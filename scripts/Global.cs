@@ -6,7 +6,7 @@ public partial class Global : Node
 {
 
     public const int CHUNK_SIZE = 16;
-    public const int RENDER_DISTANCE = 4;
+    public const int RENDER_DISTANCE = 1;
 
     public static Vector3 WorldToChunkCoordinates(Vector3 world_position)
     {
