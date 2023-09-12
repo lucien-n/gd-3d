@@ -1,24 +1,28 @@
+using System.Collections;
 using System.Linq;
 using Godot;
 using Godot.Collections;
 
-public partial class Chunk : Node
+public class Chunk
 {
     public Vector3I chunk_position = Vector3I.Zero;
-    public Dictionary<Vector3I, Voxel> voxels = new();
+    public Vector3I world_position = Vector3I.Zero;
+    public Hashtable voxels = new();
     public MeshInstance3D mesh_instance;
 
     public Chunk(Vector3I chunk_position, FastNoiseLite noise)
     {
         this.chunk_position = chunk_position;
+        world_position = chunk_position * Global.CHUNK_SIZE;
+        world_position.Y = 0;
 
         voxels = GenerateVoxels(noise);
         mesh_instance = GenerateMesh();
     }
 
-    private Dictionary<Vector3I, Voxel> GenerateVoxels(FastNoiseLite noise)
+    private Hashtable GenerateVoxels(FastNoiseLite noise)
     {
-        Dictionary<Vector3I, Voxel> voxels = new();
+        Hashtable voxels = new();
         Vector3I chunk_world_position = chunk_position * Global.CHUNK_SIZE;
 
         for (int x = 0; x < Global.CHUNK_SIZE; x++)
@@ -30,7 +34,7 @@ public partial class Chunk : Node
 
                 Vector3I position = new(x, y, z);
                 Voxel voxel = new(position, 0, VoxelMaterial.BASE);
-                voxels[position] = voxel;
+                voxels.Add(position, voxel);
             }
         }
 

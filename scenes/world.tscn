@@ -13,5 +13,3 @@ transform = Transform3D(0.683013, 0.258819, -0.683013, 0.00623603, 0.933013, 0.3
 [node name="world_generator" type="Node2D" parent="." node_paths=PackedStringArray("player")]
 script = ExtResource("2_8o0s8")
 player = NodePath("../player")
-
-[node name="GridMap" type="GridMap" parent="world_generator"]

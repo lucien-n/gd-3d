@@ -1,6 +1,6 @@
 using Godot;
 
-public partial class Voxel : Node
+public class Voxel
 {
     public Vector3I position;
     int type;
