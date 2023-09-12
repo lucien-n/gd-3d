@@ -74,8 +74,8 @@ public class Chunk
 
         adjacents[0] = voxels.ContainsKey(new Vector3I(x, y + 1, z));
         adjacents[1] = voxels.ContainsKey(new Vector3I(x, y - 1, z));
-        adjacents[2] = voxels.ContainsKey(new Vector3I(x + 1, y, z));
-        adjacents[3] = voxels.ContainsKey(new Vector3I(x - 1, y, z));
+        adjacents[2] = voxels.ContainsKey(new Vector3I(x - 1, y, z));
+        adjacents[3] = voxels.ContainsKey(new Vector3I(x + 1, y, z));
         adjacents[4] = voxels.ContainsKey(new Vector3I(x, y, z + 1));
         adjacents[5] = voxels.ContainsKey(new Vector3I(x, y, z - 1));
 
