@@ -2,21 +2,26 @@ using System;
 using System.Collections.Generic;
 using Godot;
 
-public partial class Chunk : StaticBody3D
+public partial class Chunk : Node3D
 {
-    public static StaticBody3D GenerateChunk(Vector3 chunk_position, FastNoiseLite noise)
+    private static Vector3 position;
+    private static List<Vector3> voxels;
+    private static MeshInstance3D mesh;
+
+    public static Node3D GenerateChunk(Vector3 chunk_position, FastNoiseLite noise)
     {
-        StaticBody3D chunk = new();
+        position = chunk_position;
+
+        Node3D chunk = new();
 
         Vector3 chunk_world_position = Global.ChunkToWorldCoordinates(chunk_position);
         chunk.Position = new Vector3(chunk_world_position.X, 0, chunk_world_position.Z);
 
-        List<Vector3> voxels_positions = GenerateVoxelsPositions(chunk_world_position, noise);
+        voxels = GenerateVoxelsPositions(chunk_world_position, noise);
 
-        MeshInstance3D mesh = ConstructMesh(voxels_positions);
+        mesh = ConstructMesh(voxels);
 
         chunk.AddChild(mesh);
-
         return chunk;
     }
 
@@ -34,7 +39,7 @@ public partial class Chunk : StaticBody3D
 
         MeshInstance3D mesh_instance_3d = new()
         {
-            Mesh = array_mesh
+            Mesh = array_mesh,
         };
 
         return mesh_instance_3d;

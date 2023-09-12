@@ -8,7 +8,7 @@ public partial class Generator : Node
     [Export]
     private Node3D _player;
 
-    private Dictionary<Vector3, StaticBody3D> chunks = new();
+    private Dictionary<Vector3, Node3D> chunks = new();
     private List<Vector3> unready_chunks = new();
     private readonly FastNoiseLite noise = new();
 
@@ -45,8 +45,7 @@ public partial class Generator : Node
         Vector3 player_chunk_position = Global.WorldToChunkCoordinates(_player.Position);
         List<Vector3> render_chunks = GetChunksInRenderDistance(player_chunk_position);
 
-        List<StaticBody3D> ready_chunks = new();
-
+        List<Node3D> ready_chunks = new();
         Task chunk_generation = Task.Run(() =>
         {
             foreach (Vector3 chunk_position in render_chunks)
@@ -54,23 +53,22 @@ public partial class Generator : Node
                 if (!chunks.Keys.Contains(chunk_position) && !unready_chunks.Contains(chunk_position))
                 {
                     unready_chunks.Add(chunk_position);
-                    StaticBody3D chunk = GenerateChunk(chunk_position);
+                    Node3D chunk = GenerateChunk(chunk_position);
                     ready_chunks.Add(chunk);
                 }
             }
         });
 
         await chunk_generation;
-
-        foreach (StaticBody3D chunk in ready_chunks)
+        foreach (Node3D chunk in ready_chunks)
         {
             AddChild(chunk);
         }
     }
 
-    private StaticBody3D GenerateChunk(Vector3 chunk_position)
+    private Node3D GenerateChunk(Vector3 chunk_position)
     {
-        StaticBody3D chunk = Chunk.GenerateChunk(chunk_position, noise);
+        Node3D chunk = Chunk.GenerateChunk(chunk_position, noise);
 
 
         chunks.Add(chunk_position, chunk);
