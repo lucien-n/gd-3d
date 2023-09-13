@@ -26,3 +26,7 @@ window/vsync/vsync_mode=0
 [dotnet]
 
 project/assembly_name="3d-iso"
+
+[rendering]
+
+driver/threads/thread_model=2
