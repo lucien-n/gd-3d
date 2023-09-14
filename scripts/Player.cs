@@ -1,30 +1,102 @@
+using System;
 using Godot;
 
 public partial class Player : CharacterBody3D
 {
+
     [Export]
-    public double gravity = 9.81;
+    float speed = 6.21F;
     [Export]
-    private int speed = 5;
+    const int ACCEL_DEFAULT = 18;
     [Export]
-    private int jump_speed = 5;
+    const int ACCEL_AIR = 1;
     [Export]
-    public double mouse_sensitivity = 0.002;
+    int accel = ACCEL_DEFAULT;
+
+    [Export]
+    float gravity = 9.8F;
+
+    [Export]
+    float jump = 5F;
+
+    [Export]
+    const int cam_accel = 40;
+    [Export]
+    float mouse_sense = 0.1F;
+
+    Vector3 direction = Vector3.Zero;
+    Vector3 velocity = Vector3.Zero;
+    Vector3 gravity_vec = Vector3.Zero;
+    Vector3 movement = Vector3.Zero;
+
+    Node3D head;
+    Camera3D camera;
+    public override void _Ready()
+    {
+        head = GetNode<Node3D>("head");
+        camera = GetNode<Camera3D>("head/camera");
+        Input.MouseMode = Input.MouseModeEnum.Captured;
+    }
+
+    public override void _Input(InputEvent e)
+    {
+        if (e is InputEventMouseMotion)
+        {
+            InputEventMouseMotion ev = e as InputEventMouseMotion;
+            RotateY(Mathf.DegToRad(-ev.Relative.X * mouse_sense));
+            head.RotateX(Mathf.DegToRad(-ev.Relative.Y * mouse_sense));
+            Vector3 head_rotation = head.Rotation;
+            head_rotation.X = Math.Clamp(head.Rotation.X, Mathf.DegToRad(-89), Mathf.DegToRad(89));
+            head.Rotation = head_rotation;
+        }
+    }
+
+    public override void _Process(double delta)
+    {
+        if (Engine.GetFramesPerSecond() > Engine.PhysicsTicksPerSecond)
+        {
+            camera.TopLevel = true;
+            camera.Position = camera.GlobalTransform.Origin.Lerp(head.GlobalTransform.Origin, cam_accel * (float)delta);
+            Vector3 camera_rotation = camera.Rotation;
+            camera_rotation.Y = Rotation.Y;
+            camera_rotation.X = head.Rotation.X;
+            camera.Rotation = camera_rotation;
+        }
+        else
+        {
+            camera.TopLevel = true;
+            camera.Position = head.Position;
+        }
+    }
 
     public override void _PhysicsProcess(double delta)
     {
-        Vector3 velocity = Velocity;
-        velocity.Y += (float)-gravity * (float)delta;
-        var input = Input.GetVector("left", "right", "forward", "back");
-        var movement_dir = Transform.Basis * new Vector3(input.X, 0, input.Y);
-        velocity.X = movement_dir.X * speed;
-        velocity.Z = movement_dir.Z * speed;
+        direction = Vector3.Zero;
+        var h_rot = GlobalTransform.Basis.GetEuler().Y;
+        var f_input = Input.GetActionRawStrength("move_backward") - Input.GetActionRawStrength("move_forward");
+        var h_input = Input.GetActionRawStrength("move_right") - Input.GetActionRawStrength("move_left");
 
+        direction = new Vector3(h_input, 0, f_input).Rotated(Vector3.Up, h_rot).Normalized();
 
-        if (IsOnFloor() && Input.IsActionJustPressed("jump"))
-            velocity.Y = jump_speed;
+        if (IsOnFloor())
+        {
+            accel = ACCEL_DEFAULT;
+            gravity_vec = Vector3.Zero;
+        }
+        else
+        {
+            accel = ACCEL_AIR;
+            gravity_vec += Vector3.Down * gravity * (float)delta;
+        }
 
-        Velocity = velocity;
+        if (Input.IsActionJustPressed("jump") && IsOnFloor())
+        {
+            gravity_vec = Vector3.Up * jump;
+        }
+
+        velocity = velocity.Lerp(direction * speed, accel * (float)delta);
+        movement = velocity + gravity_vec;
+        Velocity = movement;
 
         MoveAndSlide();
     }
