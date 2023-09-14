@@ -140,7 +140,7 @@ public partial class Chunk : StaticBody3D
 
         other_block_position = block_sub_position + Vector3I.Back;
         other_block_id = 0;
-        if (other_block_position.X == CHUNK_SIZE)
+        if (other_block_position.Z == CHUNK_SIZE)
             other_block_id = World.GetBlockGlobalPosition(other_block_position + chunk_position * CHUNK_SIZE);
         else if (data.ContainsKey(other_block_position)) other_block_id = data[other_block_position];
         if ((block_id != other_block_id) && IsBlockTransparent(other_block_id))
