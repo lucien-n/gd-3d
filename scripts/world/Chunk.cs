@@ -29,6 +29,11 @@ public partial class Chunk : StaticBody3D
 
     public async void Regenerate()
     {
+        MeshInstance3D mesh = new();
+        _task = Task.Run(() => { mesh = GenerateChunkMesh(); });
+
+        await _task;
+
         foreach (var c in GetChildren())
         {
             RemoveChild(c);
@@ -36,10 +41,6 @@ public partial class Chunk : StaticBody3D
         }
 
         GenerateChunkCollider();
-        MeshInstance3D mesh = new();
-        _task = Task.Run(() => { mesh = GenerateChunkMesh(); });
-
-        await _task;
         AddChild(mesh);
     }
 
