@@ -1,4 +1,6 @@
 public class VoxelMaterial
 {
-    public static int BASE = 0;
+
+    public static int AIR = 0;
+    public static int BASE = 1;
 }

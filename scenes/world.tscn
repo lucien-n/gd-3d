@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://6e6exlvcpkdm"]
 
 [ext_resource type="PackedScene" uid="uid://grw6e8wdmwfh" path="res://scenes/player.tscn" id="2_2eecf"]
-[ext_resource type="Script" path="res://scripts/world/WorldGenerator.cs" id="2_8o0s8"]
+[ext_resource type="Script" path="res://scripts/world/World.cs" id="2_ssfv6"]
 
 [node name="world" type="Node3D"]
 
@@ -10,6 +10,6 @@
 [node name="sun" type="DirectionalLight3D" parent="."]
 transform = Transform3D(0.683013, 0.258819, -0.683013, 0.00623603, 0.933013, 0.359789, 0.73038, -0.25, 0.635646, -3, 3, 3)
 
-[node name="world_generator" type="Node2D" parent="." node_paths=PackedStringArray("player")]
-script = ExtResource("2_8o0s8")
+[node name="world" type="Node2D" parent="." node_paths=PackedStringArray("player")]
+script = ExtResource("2_ssfv6")
 player = NodePath("../player")
