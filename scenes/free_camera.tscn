@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=3 uid="uid://grw6e8wdmwfh"]
+
+[ext_resource type="Script" path="res://scripts/camera_movements.gd" id="1_siwmd"]
+[ext_resource type="PackedScene" uid="uid://b1ournbnfkbp1" path="res://scenes/player.tscn" id="2_syoee"]
+
+[node name="player" type="Node3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+script = ExtResource("1_siwmd")
+
+[node name="character_body" parent="." instance=ExtResource("2_syoee")]

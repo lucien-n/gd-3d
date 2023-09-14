@@ -59,6 +59,7 @@ public partial class Chunk : StaticBody3D
         {
             int block_id = data[block_position];
             // do stuff with id (ex: no collision for water/lava)
+            CreateBlockCollider(block_position);
         }
     }
 
