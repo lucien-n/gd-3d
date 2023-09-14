@@ -19,7 +19,7 @@ public partial class World : Node
     private bool _generating = true;
     private bool _deleting = false;
 
-    public async override void _Process(double _delta)
+    public override void _Process(double _delta)
     {
         Vector3I player_chunk = Global.WorldToChunkCoordinates(new Vector3(player.Position.X, 0, player.Position.Z));
 
@@ -31,40 +31,25 @@ public partial class World : Node
 
         if (!_generating) return;
 
-        Array<Chunk> ready_chunks = new();
-
-        _task = Task.Run(() =>
+        for (int x = 0; x < (player_chunk.X + (render_distance * 2) + 1); x++)
         {
-
-            for (int x = 0; x < (player_chunk.X + (render_distance * 2) + 1); x++)
+            for (int z = 0; z < (player_chunk.Z + (render_distance * 2) + 1); z++)
             {
-                for (int z = 0; z < (player_chunk.Z + (render_distance * 2) + 1); z++)
+                Vector3I chunk_pos = new(x - render_distance, 0, z - render_distance);
+
+                if (!IsInRenderDistance(chunk_pos, player_chunk, render_distance)) continue;
+
+                if (_chunks.ContainsKey(chunk_pos) || unready_chunks.Contains(chunk_pos)) continue;
+
+                Chunk chunk = new()
                 {
-                    Vector3I chunk_pos = new(x - render_distance, 0, z - render_distance);
-
-                    if (!IsInRenderDistance(chunk_pos, player_chunk, render_distance)) continue;
-
-                    if (_chunks.ContainsKey(chunk_pos) || unready_chunks.Contains(chunk_pos)) continue;
-
-                    unready_chunks.Add(chunk_pos);
-                    Chunk chunk = new()
-                    {
-                        chunk_position = chunk_pos
-                    };
-                    ready_chunks.Add(chunk);
-                }
+                    chunk_position = chunk_pos
+                };
+                _chunks.Add(chunk_pos, chunk);
+                AddChild(chunk);
             }
-        });
-
-        await _task;
-
-        var new_chunks = ready_chunks;
-        foreach (Chunk ready_chunk in new_chunks)
-        {
-            unready_chunks.Remove(ready_chunk.chunk_position);
-            _chunks.Add(ready_chunk.chunk_position, ready_chunk);
-            AddChild(ready_chunk);
         }
+
 
         _generating = false;
     }

@@ -19,7 +19,7 @@ public partial class WorldGenerator : Node
                 float y_noise = noise.GetNoise2D(chunk_world_position.X + x, chunk_world_position.Z + z);
                 int y = (int)System.Math.Floor(y_noise * 10);
 
-                data[new Vector3I(x, y, z)] = VoxelMaterial.BASE;
+                data[new Vector3I(x, y, z)] = VoxelMaterial.GRASS;
             }
         }
 

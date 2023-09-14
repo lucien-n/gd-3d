@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Threading.Tasks;
 using Godot;
 using Godot.Collections;
@@ -5,10 +6,14 @@ using Godot.Collections;
 public partial class Chunk : StaticBody3D
 {
     private const int CHUNK_SIZE = Global.CHUNK_SIZE;
+    const int TEXTURE_SHEET_WIDTH = 8;
+    const float TEXTURE_TILE_SIZE = 1F / TEXTURE_SHEET_WIDTH;
 
     public Dictionary<Vector3I, int> data = new();
     public Vector3I chunk_position;
     private Task _task;
+
+    private Material material_override;
 
 
     public override void _Ready()
@@ -16,12 +21,13 @@ public partial class Chunk : StaticBody3D
         Position = chunk_position * CHUNK_SIZE;
         Name = chunk_position.ToString();
 
+        material_override = GD.Load<Material>("res://assets/materials/material.tres");
         data = WorldGenerator.GenerateChunk(chunk_position);
 
         Regenerate();
     }
 
-    public void Regenerate()
+    public async void Regenerate()
     {
         foreach (var c in GetChildren())
         {
@@ -30,7 +36,11 @@ public partial class Chunk : StaticBody3D
         }
 
         GenerateChunkCollider();
-        GenerateChunkMesh();
+        MeshInstance3D mesh = new();
+        _task = Task.Run(() => { mesh = GenerateChunkMesh(); });
+
+        await _task;
+        AddChild(mesh);
     }
 
     private void GenerateChunkCollider()
@@ -52,9 +62,9 @@ public partial class Chunk : StaticBody3D
         }
     }
 
-    private void GenerateChunkMesh()
+    private MeshInstance3D GenerateChunkMesh()
     {
-        if (data.Count == 0) return;
+        if (data.Count == 0) return null;
 
         SurfaceTool surface_tool = new();
         surface_tool.Begin(Mesh.PrimitiveType.Triangles);
@@ -73,8 +83,10 @@ public partial class Chunk : StaticBody3D
         MeshInstance3D mesh_instance = new()
         {
             Mesh = array_mesh,
+            MaterialOverride = material_override
         };
-        AddChild(mesh_instance);
+
+        return mesh_instance;
     }
 
     private void CreateBlockCollider(Vector3I block_sub_position)
@@ -91,19 +103,24 @@ public partial class Chunk : StaticBody3D
 
     private void DrawBlockMesh(SurfaceTool surface_tool, Vector3I block_sub_position, int block_id)
     {
-        Array<Vector3I> vertices = CalculateBlockVertices(block_sub_position);
-        Array<Vector2I> uvs = CalculateBlockUvs(block_id);
+        Vector3I[] vertices = CalculateBlockVertices(block_sub_position);
+        Vector2[] uvs = CalculateBlockUvs(block_id);
         var top_uvs = uvs;
         var bottom_uvs = uvs;
 
-        // ? Transparent blocks
+        if (block_id == 3)
+        {
+            top_uvs = CalculateBlockUvs(0);
+            bottom_uvs = CalculateBlockUvs(2);
+        }
+
         Vector3I other_block_position = block_sub_position + Vector3I.Left;
         int other_block_id = 0;
         if (other_block_position.X == -1)
             other_block_id = World.GetBlockGlobalPosition(block_sub_position);
         else if (data.ContainsKey(other_block_position)) other_block_id = data[other_block_position];
         if ((block_id != other_block_id) && IsBlockTransparent(other_block_id))
-            DrawBlockFace(surface_tool, new Array<Vector3I> { vertices[2], vertices[0], vertices[3], vertices[1] }, uvs);
+            DrawBlockFace(surface_tool, new Vector3I[] { vertices[2], vertices[0], vertices[3], vertices[1] }, uvs);
 
         other_block_position = block_sub_position + Vector3I.Right;
         other_block_id = 0;
@@ -111,7 +128,7 @@ public partial class Chunk : StaticBody3D
             other_block_id = World.GetBlockGlobalPosition(block_sub_position);
         else if (data.ContainsKey(other_block_position)) other_block_id = data[other_block_position];
         if ((block_id != other_block_id) && IsBlockTransparent(other_block_id))
-            DrawBlockFace(surface_tool, new Array<Vector3I> { vertices[7], vertices[5], vertices[6], vertices[4] }, uvs);
+            DrawBlockFace(surface_tool, new Vector3I[] { vertices[7], vertices[5], vertices[6], vertices[4] }, uvs);
 
         other_block_position = block_sub_position + Vector3I.Forward;
         other_block_id = 0;
@@ -119,7 +136,7 @@ public partial class Chunk : StaticBody3D
             other_block_id = World.GetBlockGlobalPosition(block_sub_position);
         else if (data.ContainsKey(other_block_position)) other_block_id = data[other_block_position];
         if ((block_id != other_block_id) && IsBlockTransparent(other_block_id))
-            DrawBlockFace(surface_tool, new Array<Vector3I> { vertices[6], vertices[4], vertices[2], vertices[0] }, uvs);
+            DrawBlockFace(surface_tool, new Vector3I[] { vertices[6], vertices[4], vertices[2], vertices[0] }, uvs);
 
         other_block_position = block_sub_position + Vector3I.Back;
         other_block_id = 0;
@@ -127,7 +144,7 @@ public partial class Chunk : StaticBody3D
             other_block_id = World.GetBlockGlobalPosition(block_sub_position);
         else if (data.ContainsKey(other_block_position)) other_block_id = data[other_block_position];
         if ((block_id != other_block_id) && IsBlockTransparent(other_block_id))
-            DrawBlockFace(surface_tool, new Array<Vector3I> { vertices[3], vertices[1], vertices[7], vertices[5] }, uvs);
+            DrawBlockFace(surface_tool, new Vector3I[] { vertices[3], vertices[1], vertices[7], vertices[5] }, uvs);
 
         other_block_position = block_sub_position + Vector3I.Down;
         other_block_id = 0;
@@ -135,7 +152,7 @@ public partial class Chunk : StaticBody3D
             other_block_id = World.GetBlockGlobalPosition(block_sub_position);
         else if (data.ContainsKey(other_block_position)) other_block_id = data[other_block_position];
         if ((block_id != other_block_id) && IsBlockTransparent(other_block_id))
-            DrawBlockFace(surface_tool, new Array<Vector3I> { vertices[4], vertices[5], vertices[0], vertices[1] }, bottom_uvs);
+            DrawBlockFace(surface_tool, new Vector3I[] { vertices[4], vertices[5], vertices[0], vertices[1] }, bottom_uvs);
 
         other_block_position = block_sub_position + Vector3I.Up;
         other_block_id = 0;
@@ -143,40 +160,36 @@ public partial class Chunk : StaticBody3D
             other_block_id = World.GetBlockGlobalPosition(block_sub_position);
         else if (data.ContainsKey(other_block_position)) other_block_id = data[other_block_position];
         if ((block_id != other_block_id) && IsBlockTransparent(other_block_id))
-            DrawBlockFace(surface_tool, new Array<Vector3I> { vertices[2], vertices[3], vertices[6], vertices[7] }, top_uvs);
+            DrawBlockFace(surface_tool, new Vector3I[] { vertices[2], vertices[3], vertices[6], vertices[7] }, top_uvs);
     }
 
-    private void DrawBlockFace(SurfaceTool surface_tool, Array<Vector3I> vertices, Array<Vector2I> uvs)
+    private void DrawBlockFace(SurfaceTool surface_tool, Vector3I[] vertices, Vector2[] uvs)
     {
-        // surface_tool.Add(uvs[1]); 
-        surface_tool.SetUV(uvs[1]);
-        surface_tool.AddVertex(vertices[1]);
-        // surface_tool.Add(uvs[2]); 
-        surface_tool.SetUV(uvs[2]);
-        surface_tool.AddVertex(vertices[2]);
-        // surface_tool.Add(uvs[3]); 
-        surface_tool.SetUV(uvs[3]);
-        surface_tool.AddVertex(vertices[3]);
+        surface_tool.SetUV(uvs[1]); surface_tool.AddVertex(vertices[1]);
+        surface_tool.SetUV(uvs[2]); surface_tool.AddVertex(vertices[2]);
+        surface_tool.SetUV(uvs[3]); surface_tool.AddVertex(vertices[3]);
 
-        // surface_tool.Add(uvs[2]); 
-        surface_tool.SetUV(uvs[2]);
-        surface_tool.AddVertex(vertices[2]);
-        // surface_tool.Add(uvs[1]); 
-        surface_tool.SetUV(uvs[1]);
-        surface_tool.AddVertex(vertices[1]);
-        // surface_tool.Add(uvs[0]); 
-        surface_tool.SetUV(uvs[0]);
-        surface_tool.AddVertex(vertices[0]);
+        surface_tool.SetUV(uvs[2]); surface_tool.AddVertex(vertices[2]);
+        surface_tool.SetUV(uvs[1]); surface_tool.AddVertex(vertices[1]);
+        surface_tool.SetUV(uvs[0]); surface_tool.AddVertex(vertices[0]);
     }
 
-    private Array<Vector2I> CalculateBlockUvs(int block_id)
+    private Vector2[] CalculateBlockUvs(int block_id)
     {
-        return new Array<Vector2I> { new(1, 1), new(1, 2), new(2, 1), new(2, 2) };
+        var row = block_id / TEXTURE_SHEET_WIDTH;
+        var col = block_id % TEXTURE_SHEET_WIDTH;
+
+        return new Vector2[] {
+            TEXTURE_TILE_SIZE * new Vector2(col, row),
+            TEXTURE_TILE_SIZE * new Vector2(col, row + 1),
+            TEXTURE_TILE_SIZE * new Vector2(col + 1, row),
+            TEXTURE_TILE_SIZE * new Vector2(col + 1, row + 1),
+        };
     }
 
-    private Array<Vector3I> CalculateBlockVertices(Vector3I pos)
+    private Vector3I[] CalculateBlockVertices(Vector3I pos)
     {
-        return new Array<Vector3I>() {
+        return new Vector3I[] {
             new(pos.X, pos.Y, pos.Z),
             new(pos.X, pos.Y, pos.Z + 1),
             new(pos.X, pos.Y + 1, pos.Z),
