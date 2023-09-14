@@ -16,3 +16,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.86, 0)
 
 [node name="camera" type="Camera3D" parent="head"]
 fov = 80.0
+
+[node name="raycast" type="RayCast3D" parent="head"]
+target_position = Vector3(0, 0, -4)

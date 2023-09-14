@@ -7,6 +7,11 @@ extends Control
 
 @export var world: Node3D
 
+func _ready():
+	var win_width =  ProjectSettings.get_setting("display/window/size/viewport_width")
+	var win_height =  ProjectSettings.get_setting("display/window/size/viewport_height")
+	scale = Vector2(win_width, win_height) / size
+
 func _process(_delta):
 	fps_label.text = "FPS: " + str(Engine.get_frames_per_second())
 	vp_drawing_mode_label.text = "DRAW MODE: " + str(get_viewport().debug_draw)

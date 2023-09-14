@@ -31,10 +31,13 @@ public partial class Player : CharacterBody3D
 
     Node3D head;
     Camera3D camera;
+    RayCast3D raycast;
+
     public override void _Ready()
     {
         head = GetNode<Node3D>("head");
         camera = GetNode<Camera3D>("head/camera");
+        raycast = GetNode<RayCast3D>("head/raycast");
         Input.MouseMode = Input.MouseModeEnum.Captured;
     }
 
@@ -48,6 +51,28 @@ public partial class Player : CharacterBody3D
             Vector3 head_rotation = head.Rotation;
             head_rotation.X = Math.Clamp(head.Rotation.X, Mathf.DegToRad(-89), Mathf.DegToRad(89));
             head.Rotation = head_rotation;
+        }
+
+        if (e is InputEventMouseButton)
+        {
+            InputEventMouseButton ev = e as InputEventMouseButton;
+            if (!ev.Pressed) return;
+
+            Vector3 position = raycast.GetCollisionPoint();
+            Vector3 normal = raycast.GetCollisionNormal();
+
+            if (ev.ButtonIndex == MouseButton.Left)
+            {
+                Vector3I block_global_position = (Vector3I)(position - normal / 2).Floor();
+                GD.Print(block_global_position);
+                World.SetBlockGlobalPosition(block_global_position, VoxelMaterial.AIR);
+            }
+            else if (ev.ButtonIndex == MouseButton.Right)
+            {
+                Vector3I block_global_position = (Vector3I)(position + normal / 2).Floor();
+                GD.Print(block_global_position);
+                World.SetBlockGlobalPosition(block_global_position, VoxelMaterial.STONE);
+            }
         }
     }
 
