@@ -5,3 +5,4 @@
 [resource]
 transparency = 4
 albedo_texture = ExtResource("1")
+texture_filter = 0

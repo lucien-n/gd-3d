@@ -117,15 +117,15 @@ public partial class Chunk : StaticBody3D
         Vector3I other_block_position = block_sub_position + Vector3I.Left;
         int other_block_id = 0;
         if (other_block_position.X == -1)
-            other_block_id = World.GetBlockGlobalPosition(block_sub_position);
+            other_block_id = World.GetBlockGlobalPosition(block_sub_position + chunk_position * CHUNK_SIZE);
         else if (data.ContainsKey(other_block_position)) other_block_id = data[other_block_position];
         if ((block_id != other_block_id) && IsBlockTransparent(other_block_id))
             DrawBlockFace(surface_tool, new Vector3I[] { vertices[2], vertices[0], vertices[3], vertices[1] }, uvs);
 
         other_block_position = block_sub_position + Vector3I.Right;
         other_block_id = 0;
-        if (other_block_position.X == Global.CHUNK_SIZE)
-            other_block_id = World.GetBlockGlobalPosition(block_sub_position);
+        if (other_block_position.X == CHUNK_SIZE)
+            other_block_id = World.GetBlockGlobalPosition(block_sub_position + chunk_position * CHUNK_SIZE);
         else if (data.ContainsKey(other_block_position)) other_block_id = data[other_block_position];
         if ((block_id != other_block_id) && IsBlockTransparent(other_block_id))
             DrawBlockFace(surface_tool, new Vector3I[] { vertices[7], vertices[5], vertices[6], vertices[4] }, uvs);
@@ -133,15 +133,15 @@ public partial class Chunk : StaticBody3D
         other_block_position = block_sub_position + Vector3I.Forward;
         other_block_id = 0;
         if (other_block_position.Z == -1)
-            other_block_id = World.GetBlockGlobalPosition(block_sub_position);
+            other_block_id = World.GetBlockGlobalPosition(block_sub_position + chunk_position * CHUNK_SIZE);
         else if (data.ContainsKey(other_block_position)) other_block_id = data[other_block_position];
         if ((block_id != other_block_id) && IsBlockTransparent(other_block_id))
             DrawBlockFace(surface_tool, new Vector3I[] { vertices[6], vertices[4], vertices[2], vertices[0] }, uvs);
 
         other_block_position = block_sub_position + Vector3I.Back;
         other_block_id = 0;
-        if (other_block_position.X == Global.CHUNK_SIZE)
-            other_block_id = World.GetBlockGlobalPosition(block_sub_position);
+        if (other_block_position.X == CHUNK_SIZE)
+            other_block_id = World.GetBlockGlobalPosition(block_sub_position + chunk_position * CHUNK_SIZE);
         else if (data.ContainsKey(other_block_position)) other_block_id = data[other_block_position];
         if ((block_id != other_block_id) && IsBlockTransparent(other_block_id))
             DrawBlockFace(surface_tool, new Vector3I[] { vertices[3], vertices[1], vertices[7], vertices[5] }, uvs);
@@ -149,15 +149,15 @@ public partial class Chunk : StaticBody3D
         other_block_position = block_sub_position + Vector3I.Down;
         other_block_id = 0;
         if (other_block_position.Y == -1)
-            other_block_id = World.GetBlockGlobalPosition(block_sub_position);
+            other_block_id = World.GetBlockGlobalPosition(block_sub_position + chunk_position * CHUNK_SIZE);
         else if (data.ContainsKey(other_block_position)) other_block_id = data[other_block_position];
         if ((block_id != other_block_id) && IsBlockTransparent(other_block_id))
             DrawBlockFace(surface_tool, new Vector3I[] { vertices[4], vertices[5], vertices[0], vertices[1] }, bottom_uvs);
 
         other_block_position = block_sub_position + Vector3I.Up;
         other_block_id = 0;
-        if (other_block_position.Y == Global.CHUNK_SIZE)
-            other_block_id = World.GetBlockGlobalPosition(block_sub_position);
+        if (other_block_position.Y == CHUNK_SIZE)
+            other_block_id = World.GetBlockGlobalPosition(block_sub_position + chunk_position * CHUNK_SIZE);
         else if (data.ContainsKey(other_block_position)) other_block_id = data[other_block_position];
         if ((block_id != other_block_id) && IsBlockTransparent(other_block_id))
             DrawBlockFace(surface_tool, new Vector3I[] { vertices[2], vertices[3], vertices[6], vertices[7] }, top_uvs);

@@ -10,9 +10,11 @@ public partial class World : Node
     [Export]
     public int render_distance = Global.RENDER_DISTANCE;
 
+    const int CHUNK_END_SIZE = Global.CHUNK_SIZE - 1;
+
     private Vector3I _old_player_chunk = new();
 
-    private static Dictionary<Vector3I, StaticBody3D> _chunks = new();
+    private static Dictionary<Vector3I, Chunk> _chunks = new();
     private Array<Vector3I> unready_chunks = new();
 
     private Task _task;
@@ -82,7 +84,7 @@ public partial class World : Node
         Vector3I chunk_position = block_global_position / Global.CHUNK_SIZE;
         if (_chunks.ContainsKey(chunk_position))
         {
-            Chunk chunk = (Chunk)_chunks[chunk_position];
+            Chunk chunk = _chunks[chunk_position];
             Vector3I sub_position = PosModVI(block_global_position, Global.CHUNK_SIZE);
             if (chunk.data.ContainsKey(sub_position)) return chunk.data[sub_position];
         }
@@ -93,7 +95,7 @@ public partial class World : Node
     public static void SetBlockGlobalPosition(Vector3I block_global_position, int block_id)
     {
         Vector3I chunk_position = block_global_position / Global.CHUNK_SIZE;
-        Chunk chunk = (Chunk)_chunks[chunk_position];
+        Chunk chunk = _chunks[chunk_position];
         Vector3I sub_position = PosModVI(block_global_position, Global.CHUNK_SIZE);
 
         if (block_id == 0) chunk.data.Remove(sub_position);
@@ -101,7 +103,21 @@ public partial class World : Node
 
         chunk.Regenerate();
 
-        // TODO: Regenerate neighboring chunks if block is transparent
+        if (Chunk.IsBlockTransparent(block_id))
+        {
+            if (sub_position.X == 0)
+                _chunks[chunk_position + Vector3I.Left].Regenerate();
+            else if (sub_position.X == CHUNK_END_SIZE)
+                _chunks[chunk_position + Vector3I.Right].Regenerate();
+            if (sub_position.Z == 0)
+                _chunks[chunk_position + Vector3I.Forward].Regenerate();
+            else if (sub_position.Z == CHUNK_END_SIZE)
+                _chunks[chunk_position + Vector3I.Back].Regenerate();
+            if (sub_position.Y == 0)
+                _chunks[chunk_position + Vector3I.Down].Regenerate();
+            else if (sub_position.Y == CHUNK_END_SIZE)
+                _chunks[chunk_position + Vector3I.Up].Regenerate();
+        }
     }
 
     private static Vector3I PosModVI(Vector3I value, int modulo)
