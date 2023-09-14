@@ -3,4 +3,5 @@
 [ext_resource type="Texture2D" uid="uid://c4uwfi31wwx1b" path="res://assets/textures/texture_sheet.png" id="1"]
 
 [resource]
+transparency = 4
 albedo_texture = ExtResource("1")
