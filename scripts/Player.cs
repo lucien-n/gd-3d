@@ -20,11 +20,13 @@ public partial class Player : CharacterBody3D
         velocity.X = movement_dir.X * speed;
         velocity.Z = movement_dir.Z * speed;
 
+
+        if (IsOnFloor() && Input.IsActionJustPressed("jump"))
+            velocity.Y = jump_speed;
+
         Velocity = velocity;
 
         MoveAndSlide();
-        if (IsOnFloor() && Input.IsActionJustPressed("jump"))
-            velocity.Y = jump_speed;
     }
 
 }
