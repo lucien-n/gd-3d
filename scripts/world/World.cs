@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using Godot;
 using Godot.Collections;
@@ -79,13 +80,14 @@ public partial class World : Node
 
     }
 
+
     public static int GetBlockGlobalPosition(Vector3I block_global_position)
     {
         Vector3I chunk_position = block_global_position / Global.CHUNK_SIZE;
         if (_chunks.ContainsKey(chunk_position))
         {
             Chunk chunk = _chunks[chunk_position];
-            Vector3I sub_position = PosModVI(block_global_position, Global.CHUNK_SIZE);
+            Vector3I sub_position = Mod(block_global_position, Global.CHUNK_SIZE);
             if (chunk.data.ContainsKey(sub_position)) return chunk.data[sub_position];
         }
 
@@ -96,7 +98,7 @@ public partial class World : Node
     {
         Vector3I chunk_position = block_global_position / Global.CHUNK_SIZE;
         Chunk chunk = _chunks[chunk_position];
-        Vector3I sub_position = PosModVI(block_global_position, Global.CHUNK_SIZE);
+        Vector3I sub_position = Mod(block_global_position, Global.CHUNK_SIZE);
 
         if (block_id == 0) chunk.data.Remove(sub_position);
         else chunk.data[sub_position] = block_id;
@@ -128,7 +130,6 @@ public partial class World : Node
                 GetBlockGlobalPosition(block_global_position - Vector3I.Down) == VoxelMaterial.AIR &&
                 GetBlockGlobalPosition(block_global_position - Vector3I.Forward) == VoxelMaterial.AIR &&
                 GetBlockGlobalPosition(block_global_position - Vector3I.Back) == VoxelMaterial.AIR;
-
         return is_floating;
     }
 
@@ -153,5 +154,14 @@ public partial class World : Node
     private static Vector3I PosModVI(Vector3I value, int modulo)
     {
         return (Vector3I)((Vector3)value).PosMod(modulo);
+    }
+
+    private static Vector3I Mod(Vector3I value, int modulo)
+    {
+        return new Vector3I(
+            value.X % modulo,
+            value.Y % modulo,
+            value.Z % modulo
+        );
     }
 }
