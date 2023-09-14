@@ -17,3 +17,4 @@ transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 
 [node name="generator" type="Node3D" parent="." node_paths=PackedStringArray("player")]
 script = ExtResource("2_ssfv6")
 player = NodePath("../player")
+render_distance = 8

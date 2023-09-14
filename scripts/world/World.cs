@@ -18,7 +18,6 @@ public partial class World : Node
     private static Dictionary<Vector3I, Chunk> _chunks = new();
     private Array<Vector3I> unready_chunks = new();
 
-    private Task _task;
     private bool _generating = true;
     private bool _deleting = false;
 
@@ -63,7 +62,7 @@ public partial class World : Node
 
         foreach (Vector3I chunk_position in _chunks.Keys)
         {
-            if (!IsInRenderDistance(chunk_position, player_chunk, render_distance))
+            if (_chunks.ContainsKey(chunk_position) && !IsInRenderDistance(chunk_position, player_chunk, render_distance))
             {
                 _chunks[chunk_position].QueueFree();
                 _chunks.Remove(chunk_position);
@@ -75,8 +74,8 @@ public partial class World : Node
 
     private bool IsInRenderDistance(Vector3I chunk_pos, Vector3I player_chunk, int render_distance)
     {
-        return chunk_pos.X >= player_chunk.X - render_distance + 1 && chunk_pos.X <= player_chunk.X + render_distance + 1 &&
-                     chunk_pos.Z >= player_chunk.Z - render_distance + 1 && chunk_pos.Z <= player_chunk.Z + render_distance + 1;
+        return chunk_pos.X >= player_chunk.X - render_distance && chunk_pos.X <= player_chunk.X + render_distance &&
+                     chunk_pos.Z >= player_chunk.Z - render_distance && chunk_pos.Z <= player_chunk.Z + render_distance;
 
     }
 
@@ -133,8 +132,9 @@ public partial class World : Node
         return is_floating;
     }
 
-    public static bool PlaceBlockAsPlayer(Vector3I block_global_position, int block_id)
+    public static bool PlaceBlockAsPlayer(Vector3I block_global_position, Vector3 cast_position, int block_id)
     {
+        if (DistanceBetween(cast_position, block_global_position) > Global.PLAYER_REACH) return false;
         if (GetBlockGlobalPosition(block_global_position) != VoxelMaterial.AIR || IsBlockFloating(block_global_position)) return false;
 
         SetBlockGlobalPosition(block_global_position, block_id);
@@ -142,18 +142,14 @@ public partial class World : Node
         return true;
     }
 
-    public static bool BreakBlockAsPlayer(Vector3I block_global_position)
+    public static bool BreakBlockAsPlayer(Vector3I block_global_position, Vector3 cast_position)
     {
+        if (DistanceBetween(cast_position, block_global_position) > Global.PLAYER_REACH) return false;
         if (GetBlockGlobalPosition(block_global_position) == VoxelMaterial.AIR) return false;
 
         SetBlockGlobalPosition(block_global_position, VoxelMaterial.AIR);
 
         return true;
-    }
-
-    private static Vector3I PosModVI(Vector3I value, int modulo)
-    {
-        return (Vector3I)((Vector3)value).PosMod(modulo);
     }
 
     private static Vector3I Mod(Vector3I value, int modulo)
@@ -163,5 +159,14 @@ public partial class World : Node
             value.Y % modulo,
             value.Z % modulo
         );
+    }
+
+    public static double DistanceBetween(Vector3 a, Vector3 b)
+    {
+        double dx = a.X - b.X;
+        double dy = a.Y - b.Y;
+        double dz = a.Z - b.Z;
+
+        return Math.Sqrt(dx * dx + dy * dy + dz * dz);
     }
 }

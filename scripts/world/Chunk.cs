@@ -22,6 +22,7 @@ public partial class Chunk : StaticBody3D
         Name = chunk_position.ToString();
 
         material_override = GD.Load<Material>("res://assets/materials/material.tres");
+
         data = WorldGenerator.GenerateChunk(chunk_position);
 
         Regenerate();
