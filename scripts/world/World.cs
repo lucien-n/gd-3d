@@ -120,6 +120,36 @@ public partial class World : Node
         }
     }
 
+    public static bool IsBlockFloating(Vector3I block_global_position)
+    {
+        bool is_floating = GetBlockGlobalPosition(block_global_position - Vector3I.Left) == VoxelMaterial.AIR &&
+                GetBlockGlobalPosition(block_global_position - Vector3I.Right) == VoxelMaterial.AIR &&
+                GetBlockGlobalPosition(block_global_position - Vector3I.Up) == VoxelMaterial.AIR &&
+                GetBlockGlobalPosition(block_global_position - Vector3I.Down) == VoxelMaterial.AIR &&
+                GetBlockGlobalPosition(block_global_position - Vector3I.Forward) == VoxelMaterial.AIR &&
+                GetBlockGlobalPosition(block_global_position - Vector3I.Back) == VoxelMaterial.AIR;
+
+        return is_floating;
+    }
+
+    public static bool PlaceBlockAsPlayer(Vector3I block_global_position, int block_id)
+    {
+        if (GetBlockGlobalPosition(block_global_position) != VoxelMaterial.AIR || IsBlockFloating(block_global_position)) return false;
+
+        SetBlockGlobalPosition(block_global_position, block_id);
+
+        return true;
+    }
+
+    public static bool BreakBlockAsPlayer(Vector3I block_global_position)
+    {
+        if (GetBlockGlobalPosition(block_global_position) == VoxelMaterial.AIR) return false;
+
+        SetBlockGlobalPosition(block_global_position, VoxelMaterial.AIR);
+
+        return true;
+    }
+
     private static Vector3I PosModVI(Vector3I value, int modulo)
     {
         return (Vector3I)((Vector3)value).PosMod(modulo);
