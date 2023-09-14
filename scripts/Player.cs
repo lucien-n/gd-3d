@@ -58,8 +58,13 @@ public partial class Player : CharacterBody3D
             InputEventMouseButton ev = e as InputEventMouseButton;
             if (!ev.Pressed) return;
 
+            raycast.ForceRaycastUpdate();
+            if (!raycast.IsColliding()) return;
+
             Vector3 position = raycast.GetCollisionPoint();
             Vector3 normal = raycast.GetCollisionNormal();
+
+            GD.Print(position, normal);
 
             if (ev.ButtonIndex == MouseButton.Left)
             {
