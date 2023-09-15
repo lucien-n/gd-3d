@@ -64,11 +64,10 @@ public partial class Player : CharacterBody3D
             Vector3 position = raycast.GetCollisionPoint();
             Vector3 normal = raycast.GetCollisionNormal();
 
-            GD.Print(position, normal);
-
             if (ev.ButtonIndex == MouseButton.Left)
             {
                 Vector3I block_global_position = (Vector3I)(position - normal / 2).Floor();
+                GD.Print(block_global_position);
                 World.BreakBlockAsPlayer(block_global_position, raycast.GlobalPosition);
             }
             else if (ev.ButtonIndex == MouseButton.Right)

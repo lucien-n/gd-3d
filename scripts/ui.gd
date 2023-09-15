@@ -2,6 +2,7 @@ extends Control
 
 @onready var fps_label = $debug/fps
 @onready var player_pos_label = $debug/player_pos
+@onready var player_chunk_label = $debug/player_chunk
 @onready var vp_drawing_mode_label = $debug/vp_drawing_mode
 @onready var camera_label = $debug/camera
 
@@ -19,6 +20,7 @@ func _process(_delta):
 	if !world: return
 	
 	player_pos_label.text = "POS: " + str(world.get_node("player").position)
+	player_chunk_label.text = "CHUNK: " + str(world.get_node("generator").player_chunk)
 
 	var camera_rotation = world.get_node("player").rotation
 	var facing = "north"

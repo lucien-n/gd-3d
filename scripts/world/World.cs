@@ -13,6 +13,7 @@ public partial class World : Node
 
     const int CHUNK_END_SIZE = Global.CHUNK_SIZE - 1;
 
+    public Vector3I player_chunk = new();
     private Vector3I _old_player_chunk = new();
 
     private static Dictionary<Vector3I, Chunk> _chunks = new();
@@ -23,7 +24,7 @@ public partial class World : Node
 
     public override void _Process(double _delta)
     {
-        Vector3I player_chunk = Global.WorldToChunkCoordinates(new Vector3(player.Position.X, 0, player.Position.Z));
+        player_chunk = Global.WorldToChunkCoordinates(new Vector3(player.Position.X, 0, player.Position.Z));
 
         if (_deleting || player_chunk != _old_player_chunk)
         {
@@ -82,11 +83,11 @@ public partial class World : Node
 
     public static int GetBlockGlobalPosition(Vector3I block_global_position)
     {
-        Vector3I chunk_position = block_global_position / Global.CHUNK_SIZE;
+        Vector3I chunk_position = GetChunkFromBlockGlobal(block_global_position);
         if (_chunks.ContainsKey(chunk_position))
         {
             Chunk chunk = _chunks[chunk_position];
-            Vector3I sub_position = Mod(block_global_position, Global.CHUNK_SIZE);
+            Vector3I sub_position = PosMod(block_global_position, Global.CHUNK_SIZE);
             if (chunk.data.ContainsKey(sub_position)) return chunk.data[sub_position];
         }
 
@@ -95,9 +96,9 @@ public partial class World : Node
 
     public static void SetBlockGlobalPosition(Vector3I block_global_position, int block_id)
     {
-        Vector3I chunk_position = block_global_position / Global.CHUNK_SIZE;
+        Vector3I chunk_position = GetChunkFromBlockGlobal(block_global_position);
         Chunk chunk = _chunks[chunk_position];
-        Vector3I sub_position = Mod(block_global_position, Global.CHUNK_SIZE);
+        Vector3I sub_position = PosMod(block_global_position, Global.CHUNK_SIZE);
 
         if (block_id == 0) chunk.data.Remove(sub_position);
         else chunk.data[sub_position] = block_id;
@@ -121,6 +122,13 @@ public partial class World : Node
         }
     }
 
+    public static Vector3I GetChunkFromBlockGlobal(Vector3I block_global_position)
+    {
+        Vector3I chunk_position = block_global_position / Global.CHUNK_SIZE;
+        GD.Print("Block at '", block_global_position, "' is in chunk: ", chunk_position);
+        return chunk_position;
+    }
+
     public static bool IsBlockFloating(Vector3I block_global_position)
     {
         bool is_floating = GetBlockGlobalPosition(block_global_position - Vector3I.Left) == VoxelMaterial.AIR &&
@@ -129,15 +137,22 @@ public partial class World : Node
                 GetBlockGlobalPosition(block_global_position - Vector3I.Down) == VoxelMaterial.AIR &&
                 GetBlockGlobalPosition(block_global_position - Vector3I.Forward) == VoxelMaterial.AIR &&
                 GetBlockGlobalPosition(block_global_position - Vector3I.Back) == VoxelMaterial.AIR;
-        return is_floating;
+        GD.Print("Is Floating:", block_global_position, is_floating);
+        return false;
     }
 
     public static bool PlaceBlockAsPlayer(Vector3I block_global_position, Vector3 cast_position, int block_id)
     {
+        GD.Print("Place: ", block_global_position);
         if (DistanceBetween(cast_position, block_global_position) > Global.PLAYER_REACH) return false;
-        if (GetBlockGlobalPosition(block_global_position) != VoxelMaterial.AIR || IsBlockFloating(block_global_position)) return false;
+        GD.Print("Valid reach: ", block_global_position);
+        if (GetBlockGlobalPosition(block_global_position) != VoxelMaterial.AIR) return false;
+        GD.Print("Not air: ", block_global_position);
+        if (IsBlockFloating(block_global_position)) return false;
+        GD.Print("Not floating: ", block_global_position);
 
         SetBlockGlobalPosition(block_global_position, block_id);
+        GD.Print("Set block: ", block_global_position);
 
         return true;
     }
@@ -159,6 +174,11 @@ public partial class World : Node
             value.Y % modulo,
             value.Z % modulo
         );
+    }
+
+    private static Vector3I PosMod(Vector3I value, int modulo)
+    {
+        return (Vector3I)((Vector3)value).PosMod(modulo);
     }
 
     public static double DistanceBetween(Vector3 a, Vector3 b)
