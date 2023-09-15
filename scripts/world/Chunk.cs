@@ -6,7 +6,7 @@ using Godot.Collections;
 public partial class Chunk : StaticBody3D
 {
     private const int CHUNK_SIZE = Global.CHUNK_SIZE;
-    const int TEXTURE_SHEET_WIDTH = 8;
+    const int TEXTURE_SHEET_WIDTH = Global.TEXTURE_SHEET_WIDTH;
     const float TEXTURE_TILE_SIZE = 1F / TEXTURE_SHEET_WIDTH;
 
     public Dictionary<Vector3I, int> data = new();
@@ -177,7 +177,7 @@ public partial class Chunk : StaticBody3D
         surface_tool.SetUV(uvs[0]); surface_tool.AddVertex(vertices[0]);
     }
 
-    private Vector2[] CalculateBlockUvs(int block_id)
+    public static Vector2[] CalculateBlockUvs(int block_id)
     {
         var row = block_id / TEXTURE_SHEET_WIDTH;
         var col = block_id % TEXTURE_SHEET_WIDTH;

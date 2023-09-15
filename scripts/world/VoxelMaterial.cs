@@ -22,11 +22,12 @@ public class VoxelMaterial
     public static int COAL_ORE = 18;
     public static int BOOKSHELF = 19;
     public static int MOSSY_COBBLESTONE = 20;
+    public static int COAL_BLOCK = 21;
     public static int DIAMOND_ORE = 22;
     public static int IRON_ORE = 23;
     public static int SPONGE = 24;
     public static int LEAF_BLOCK = 25;
     public static int SAPLING = 27;
-    public static int GLASS_BLOCK = 29;
+    public static int GLASS = 29;
     public static int LOG_TOP = 30;
 }
