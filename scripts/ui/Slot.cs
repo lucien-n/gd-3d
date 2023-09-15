@@ -1,20 +1,20 @@
 using Godot;
 
-public partial class Slot : Control
+public partial class Slot : Panel
 {
     public int index;
-    public int material;
+    public VoxelMaterial material;
 
-    TextureRect texture_rect;
+    Sprite2D sprite;
 
     public override void _Ready()
     {
-        texture_rect = GetNode<TextureRect>("texture_rect");
+        sprite = GetNode<Sprite2D>("sprite");
         UpdateTexture();
     }
 
     public void UpdateTexture()
     {
-        texture_rect.Texture = TextureLoader.GetBlockTexture("stone");
+        sprite.Texture = TextureLoader.GetBlockTexture(material.name);
     }
 }

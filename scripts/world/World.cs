@@ -90,7 +90,7 @@ public partial class World : Node
             if (chunk.data.ContainsKey(sub_position)) return chunk.data[sub_position];
         }
 
-        return VoxelMaterial.AIR;
+        return Materials.AIR.id;
     }
 
     public static void SetBlockGlobalPosition(Vector3I block_global_position, int block_id)
@@ -129,22 +129,22 @@ public partial class World : Node
 
     public static bool IsBlockFloating(Vector3I block_global_position)
     {
-        bool is_floating = GetBlockGlobalPosition(block_global_position - Vector3I.Left) == VoxelMaterial.AIR &&
-                GetBlockGlobalPosition(block_global_position - Vector3I.Right) == VoxelMaterial.AIR &&
-                GetBlockGlobalPosition(block_global_position - Vector3I.Up) == VoxelMaterial.AIR &&
-                GetBlockGlobalPosition(block_global_position - Vector3I.Down) == VoxelMaterial.AIR &&
-                GetBlockGlobalPosition(block_global_position - Vector3I.Forward) == VoxelMaterial.AIR &&
-                GetBlockGlobalPosition(block_global_position - Vector3I.Back) == VoxelMaterial.AIR;
+        bool is_floating = GetBlockGlobalPosition(block_global_position - Vector3I.Left) == Materials.AIR.id &&
+                GetBlockGlobalPosition(block_global_position - Vector3I.Right) == Materials.AIR.id &&
+                GetBlockGlobalPosition(block_global_position - Vector3I.Up) == Materials.AIR.id &&
+                GetBlockGlobalPosition(block_global_position - Vector3I.Down) == Materials.AIR.id &&
+                GetBlockGlobalPosition(block_global_position - Vector3I.Forward) == Materials.AIR.id &&
+                GetBlockGlobalPosition(block_global_position - Vector3I.Back) == Materials.AIR.id;
         return is_floating;
     }
 
-    public static bool PlaceBlockAsPlayer(Vector3I block_global_position, Vector3 cast_position, int block_id)
+    public static bool PlaceBlockAsPlayer(Vector3I block_global_position, Vector3 cast_position, VoxelMaterial material)
     {
         if (DistanceBetween(cast_position, block_global_position) > Global.PLAYER_REACH) return false;
-        if (GetBlockGlobalPosition(block_global_position) != VoxelMaterial.AIR) return false;
+        if (GetBlockGlobalPosition(block_global_position) != Materials.AIR.id) return false;
         if (IsBlockFloating(block_global_position)) return false;
 
-        SetBlockGlobalPosition(block_global_position, block_id);
+        SetBlockGlobalPosition(block_global_position, material.id);
 
         return true;
     }
@@ -152,9 +152,9 @@ public partial class World : Node
     public static bool BreakBlockAsPlayer(Vector3I block_global_position, Vector3 cast_position)
     {
         if (DistanceBetween(cast_position, block_global_position) > Global.PLAYER_REACH) return false;
-        if (GetBlockGlobalPosition(block_global_position) == VoxelMaterial.AIR) return false;
+        if (GetBlockGlobalPosition(block_global_position) == Materials.AIR.id) return false;
 
-        SetBlockGlobalPosition(block_global_position, VoxelMaterial.AIR);
+        SetBlockGlobalPosition(block_global_position, Materials.AIR.id);
 
         return true;
     }

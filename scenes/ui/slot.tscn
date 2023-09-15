@@ -2,21 +2,15 @@
 
 [ext_resource type="Script" path="res://scripts/ui/Slot.cs" id="1_nffmu"]
 
-[node name="Slot" type="Control"]
-layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_right = -1104.0
-offset_bottom = -600.0
-grow_horizontal = 2
-grow_vertical = 2
+[node name="slot" type="Panel"]
+self_modulate = Color(0, 0, 0, 0)
+custom_minimum_size = Vector2(36, 36)
+offset_right = 36.0
+offset_bottom = 36.0
+scale = Vector2(2, 2)
 script = ExtResource("1_nffmu")
 
-[node name="texture_rect" type="TextureRect" parent="."]
-layout_mode = 0
-offset_left = 3.0
-offset_top = 3.0
-offset_right = 43.0
-offset_bottom = 43.0
-expand_mode = 1
+[node name="sprite" type="Sprite2D" parent="."]
+position = Vector2(10, 10)
+scale = Vector2(1.5, 1.5)
+centered = false

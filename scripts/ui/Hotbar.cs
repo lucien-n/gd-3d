@@ -6,8 +6,7 @@ public partial class Hotbar : Control
     private Dictionary<int, Slot> _slots = new();
 
     private int selected_slot = 0;
-    private Control slots_container;
-    private TextureRect hotbar_texture;
+    private GridContainer slots_container;
     private TextureRect selected_texture;
 
     [Export]
@@ -15,17 +14,32 @@ public partial class Hotbar : Control
 
     public override void _Ready()
     {
-        hotbar_texture = GetNode<TextureRect>("hotbar");
         selected_texture = GetNode<TextureRect>("selected");
-        slots_container = GetNode<Control>("slots");
+        slots_container = GetNode<GridContainer>("slots");
 
         for (int i = 0; i < 9; i++)
         {
             Slot slot = slot_scene.Instantiate() as Slot;
             slot.index = i;
-            slot.material = VoxelMaterial.STONE;
+            slot.material = Materials.STONE;
             _slots[i] = slot;
             slots_container.AddChild(slot);
+        }
+
+        _slots[0].material = Materials.STONE;
+        _slots[1].material = Materials.DIRT;
+        _slots[2].material = Materials.COBBLESTONE;
+        _slots[3].material = Materials.DIAMOND_BLOCK;
+        _slots[4].material = Materials.BRICK;
+        _slots[5].material = Materials.STONE_BRICK;
+        _slots[6].material = Materials.SAND;
+        _slots[7].material = Materials.GRAVEL;
+        _slots[8].material = Materials.GRASS;
+
+
+        foreach (Slot slot in _slots.Values)
+        {
+            slot.UpdateTexture();
         }
     }
 
@@ -41,12 +55,12 @@ public partial class Hotbar : Control
             InputEventMouseButton e = @event as InputEventMouseButton;
             if (e.IsPressed())
             {
-                if (e.ButtonIndex == MouseButton.WheelUp)
+                if (e.ButtonIndex == MouseButton.WheelDown)
                 {
                     selected_slot += 1;
                     if (selected_slot == 9) selected_slot = 0;
                 }
-                if (e.ButtonIndex == MouseButton.WheelDown)
+                if (e.ButtonIndex == MouseButton.WheelUp)
                 {
                     selected_slot -= 1;
                     if (selected_slot == -1) selected_slot = 8;

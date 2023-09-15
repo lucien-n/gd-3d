@@ -1,6 +1,6 @@
 using Godot;
 
-public partial class Ui : Control
+public partial class Ui : CanvasLayer
 {
     [Export]
     public Node3D world;
@@ -17,12 +17,6 @@ public partial class Ui : Control
 
     public override void _Ready()
     {
-
-        var win_width = ProjectSettings.GetSetting("display/window/size/viewport_width");
-        var win_height = ProjectSettings.GetSetting("display/window/size/viewport_height");
-
-        Scale = new Vector2((float)win_width, (float)win_height) / Size;
-
         debug_control = GetNode<Control>("debug");
 
         fps_label = debug_control.GetNode<Label>("fps");
