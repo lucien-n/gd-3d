@@ -65,6 +65,8 @@ public partial class Hotbar : Control
                     selected_slot -= 1;
                     if (selected_slot == -1) selected_slot = 8;
                 }
+
+                Global.PLAYER_HOLDING = _slots[selected_slot].material;
             }
         }
     }

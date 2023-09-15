@@ -9,6 +9,8 @@ public partial class Global : Node
     public const int PLAYER_REACH = 4;
     public const int TEXTURE_SHEET_WIDTH = 8;
 
+    public static VoxelMaterial PLAYER_HOLDING = Materials.AIR;
+
 
     public static Vector3I WorldToChunkCoordinates(Vector3 world_position)
     {

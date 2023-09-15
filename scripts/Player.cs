@@ -73,7 +73,7 @@ public partial class Player : CharacterBody3D
             else if (ev.ButtonIndex == MouseButton.Right)
             {
                 Vector3I block_global_position = (Vector3I)(position + normal / 2).Floor();
-                World.PlaceBlockAsPlayer(block_global_position, raycast.GlobalPosition, Materials.STONE);
+                World.PlaceBlockAsPlayer(block_global_position, raycast.GlobalPosition, Global.PLAYER_HOLDING);
             }
         }
     }
