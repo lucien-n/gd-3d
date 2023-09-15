@@ -1,8 +1,8 @@
 [gd_scene load_steps=4 format=3 uid="uid://ds3qommm0s6l1"]
 
-[ext_resource type="Script" path="res://scripts/ui.gd" id="1_ccugg"]
 [ext_resource type="Theme" uid="uid://e4jasm1s5hqi" path="res://assets/theme.tres" id="1_v64nc"]
 [ext_resource type="Texture2D" uid="uid://bq6ymqrf7uj0w" path="res://assets/textures/crosshair.png" id="2_5fqma"]
+[ext_resource type="Script" path="res://scripts/ui/Ui.cs" id="2_mvylv"]
 
 [node name="ui" type="Control"]
 texture_filter = 1
@@ -15,7 +15,7 @@ offset_bottom = -108.0
 grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("1_v64nc")
-script = ExtResource("1_ccugg")
+script = ExtResource("2_mvylv")
 
 [node name="debug" type="VBoxContainer" parent="."]
 layout_mode = 0
@@ -55,3 +55,8 @@ grow_horizontal = 2
 grow_vertical = 2
 texture = ExtResource("2_5fqma")
 expand_mode = 1
+
+[node name="hotbar" type="HBoxContainer" parent="."]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
