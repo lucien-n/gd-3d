@@ -1,6 +1,6 @@
 using Godot;
 
-public partial class Slot : Control
+public partial class Slot : TextureRect
 {
     public int index;
     public int material;
@@ -12,7 +12,6 @@ public partial class Slot : Control
 
     public void UpdateTexture()
     {
-        var row = material / Global.TEXTURE_SHEET_WIDTH;
-        var col = material % Global.TEXTURE_SHEET_WIDTH;
+        // Texture = TextureLoader.GetBlockTexture("stone");
     }
 }
