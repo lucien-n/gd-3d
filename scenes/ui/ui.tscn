@@ -1,11 +1,12 @@
-[gd_scene load_steps=7 format=3 uid="uid://ds3qommm0s6l1"]
+[gd_scene load_steps=8 format=3 uid="uid://ds3qommm0s6l1"]
 
-[ext_resource type="Theme" uid="uid://e4jasm1s5hqi" path="res://assets/theme.tres" id="1_v64nc"]
-[ext_resource type="Texture2D" uid="uid://bq6ymqrf7uj0w" path="res://assets/textures/crosshair.png" id="2_5fqma"]
-[ext_resource type="Script" path="res://scripts/ui/Ui.cs" id="2_mvylv"]
-[ext_resource type="Texture2D" uid="uid://0q25srm26me" path="res://assets/textures/ui/hotbar.png" id="4_2mpcp"]
-[ext_resource type="Script" path="res://scripts/ui/Hotbar.cs" id="4_lkym4"]
-[ext_resource type="Texture2D" uid="uid://cqurr8vis26m8" path="res://assets/textures/ui/selected.png" id="6_d6owg"]
+[ext_resource type="Theme" uid="uid://e4jasm1s5hqi" path="res://assets/theme.tres" id="1_w5fdr"]
+[ext_resource type="Script" path="res://scripts/ui/Ui.cs" id="2_0nxp7"]
+[ext_resource type="Texture2D" uid="uid://bq6ymqrf7uj0w" path="res://assets/textures/crosshair.png" id="3_4h6ym"]
+[ext_resource type="Script" path="res://scripts/ui/Hotbar.cs" id="4_h7x14"]
+[ext_resource type="Texture2D" uid="uid://0q25srm26me" path="res://assets/textures/ui/hotbar.png" id="5_87fvt"]
+[ext_resource type="PackedScene" uid="uid://ccso6048gqpiv" path="res://scenes/ui/slot.tscn" id="6_803wt"]
+[ext_resource type="Texture2D" uid="uid://cqurr8vis26m8" path="res://assets/textures/ui/selected.png" id="7_hgf16"]
 
 [node name="ui" type="Control"]
 texture_filter = 1
@@ -17,8 +18,8 @@ offset_right = -192.0
 offset_bottom = -108.0
 grow_horizontal = 2
 grow_vertical = 2
-theme = ExtResource("1_v64nc")
-script = ExtResource("2_mvylv")
+theme = ExtResource("1_w5fdr")
+script = ExtResource("2_0nxp7")
 
 [node name="debug" type="VBoxContainer" parent="."]
 layout_mode = 0
@@ -56,7 +57,7 @@ offset_right = 16.0
 offset_bottom = 16.0
 grow_horizontal = 2
 grow_vertical = 2
-texture = ExtResource("2_5fqma")
+texture = ExtResource("3_4h6ym")
 expand_mode = 1
 
 [node name="hotbar" type="Control" parent="."]
@@ -72,15 +73,27 @@ offset_right = 182.0
 offset_bottom = -6.0
 grow_horizontal = 2
 grow_vertical = 0
-script = ExtResource("4_lkym4")
+script = ExtResource("4_h7x14")
+slot_scene = ExtResource("6_803wt")
 
 [node name="hotbar" type="TextureRect" parent="hotbar"]
 layout_mode = 0
 offset_right = 182.0
 offset_bottom = 22.0
 scale = Vector2(2, 2)
-texture = ExtResource("4_2mpcp")
+texture = ExtResource("5_87fvt")
 stretch_mode = 2
+
+[node name="slots" type="HBoxContainer" parent="hotbar"]
+layout_direction = 2
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_top = -22.0
+offset_right = 182.0
+grow_vertical = 2
+scale = Vector2(2, 2)
 
 [node name="selected" type="TextureRect" parent="hotbar"]
 layout_mode = 0
@@ -88,4 +101,4 @@ offset_left = -2.0
 offset_top = -2.0
 offset_right = 46.0
 offset_bottom = 46.0
-texture = ExtResource("6_d6owg")
+texture = ExtResource("7_hgf16")

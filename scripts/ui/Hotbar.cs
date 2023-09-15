@@ -4,25 +4,28 @@ using Godot.Collections;
 public partial class Hotbar : Control
 {
     private Dictionary<int, Slot> _slots = new();
-    private int selected_slot = 0;
 
+    private int selected_slot = 0;
+    private Control slots_container;
     private TextureRect hotbar_texture;
     private TextureRect selected_texture;
+
+    [Export]
+    PackedScene slot_scene;
 
     public override void _Ready()
     {
         hotbar_texture = GetNode<TextureRect>("hotbar");
         selected_texture = GetNode<TextureRect>("selected");
+        slots_container = GetNode<Control>("slots");
 
         for (int i = 0; i < 9; i++)
         {
-            Slot slot = new()
-            {
-                index = i,
-                material = VoxelMaterial.STONE
-            };
+            Slot slot = slot_scene.Instantiate() as Slot;
+            slot.index = i;
+            slot.material = VoxelMaterial.STONE;
             _slots[i] = slot;
-            AddChild(slot);
+            slots_container.AddChild(slot);
         }
     }
 

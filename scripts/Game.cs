@@ -12,7 +12,6 @@ public partial class Game : Node3D
     public override void _Ready()
     {
         vp = GetViewport();
-        TextureLoader.LoadTextures();
     }
 
     public override void _Input(InputEvent @event)

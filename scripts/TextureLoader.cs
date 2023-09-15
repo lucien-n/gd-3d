@@ -7,12 +7,12 @@ public partial class TextureLoader : Node
 
     public static void LoadTextures()
     {
-        textures["blocks"] = GetTexturesInDir("D:/godot/3d-iso/assets/textures/blocks/");
+        textures["blocks"] = GetTexturesInDir("D:/godot/3d-iso/assets/textures/blocks");
     }
 
     public static Dictionary<string, Texture2D> GetTexturesInDir(string path)
     {
-        Dictionary<string, Texture2D> textures = new();
+        Dictionary<string, Texture2D> dir_textures = new();
 
         DirAccess dir = DirAccess.Open(path);
         if (dir == null) return null;
@@ -26,15 +26,15 @@ public partial class TextureLoader : Node
             {
                 string name = file_name.Replace(".png", "");
                 string full_path = path + "/" + file_name;
-                // GD.Print("Loading ", file_name, " at ", full_path);
+                GD.Print("Loading ", name, " at ", full_path);
                 Texture2D texture = ResourceLoader.Load<Texture2D>(full_path);
-                textures[name] = texture;
+                dir_textures[name] = texture;
             }
 
             file_name = dir.GetNext();
         }
 
-        return textures;
+        return dir_textures;
     }
 
     public static Texture2D GetBlockTexture(string block_name)
