@@ -125,7 +125,6 @@ public partial class World : Node
     public static Vector3I GetChunkFromBlockGlobal(Vector3I block_global_position)
     {
         Vector3I chunk_position = block_global_position / Global.CHUNK_SIZE;
-        GD.Print("Block at '", block_global_position, "' is in chunk: ", chunk_position);
         return chunk_position;
     }
 
@@ -137,22 +136,16 @@ public partial class World : Node
                 GetBlockGlobalPosition(block_global_position - Vector3I.Down) == VoxelMaterial.AIR &&
                 GetBlockGlobalPosition(block_global_position - Vector3I.Forward) == VoxelMaterial.AIR &&
                 GetBlockGlobalPosition(block_global_position - Vector3I.Back) == VoxelMaterial.AIR;
-        GD.Print("Is Floating:", block_global_position, is_floating);
-        return false;
+        return is_floating;
     }
 
     public static bool PlaceBlockAsPlayer(Vector3I block_global_position, Vector3 cast_position, int block_id)
     {
-        GD.Print("Place: ", block_global_position);
         if (DistanceBetween(cast_position, block_global_position) > Global.PLAYER_REACH) return false;
-        GD.Print("Valid reach: ", block_global_position);
         if (GetBlockGlobalPosition(block_global_position) != VoxelMaterial.AIR) return false;
-        GD.Print("Not air: ", block_global_position);
         if (IsBlockFloating(block_global_position)) return false;
-        GD.Print("Not floating: ", block_global_position);
 
         SetBlockGlobalPosition(block_global_position, block_id);
-        GD.Print("Set block: ", block_global_position);
 
         return true;
     }
