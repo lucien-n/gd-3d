@@ -69,5 +69,13 @@ public partial class Hotbar : Control
                 Global.PLAYER_HOLDING = _slots[selected_slot].material;
             }
         }
+        else if (@event is InputEventKey)
+        {
+            InputEventKey e = @event as InputEventKey;
+            if (e.IsPressed() && (int)e.Keycode > 47 && (int)e.Keycode < 58)
+            {
+                selected_slot = (int)e.Keycode - 49;
+            }
+        }
     }
 }
