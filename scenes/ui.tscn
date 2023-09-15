@@ -1,8 +1,11 @@
-[gd_scene load_steps=4 format=3 uid="uid://ds3qommm0s6l1"]
+[gd_scene load_steps=7 format=3 uid="uid://ds3qommm0s6l1"]
 
 [ext_resource type="Theme" uid="uid://e4jasm1s5hqi" path="res://assets/theme.tres" id="1_v64nc"]
 [ext_resource type="Texture2D" uid="uid://bq6ymqrf7uj0w" path="res://assets/textures/crosshair.png" id="2_5fqma"]
 [ext_resource type="Script" path="res://scripts/ui/Ui.cs" id="2_mvylv"]
+[ext_resource type="Texture2D" uid="uid://0q25srm26me" path="res://assets/textures/ui/hotbar.png" id="4_2mpcp"]
+[ext_resource type="Script" path="res://scripts/ui/Hotbar.cs" id="4_lkym4"]
+[ext_resource type="Texture2D" uid="uid://cqurr8vis26m8" path="res://assets/textures/ui/selected.png" id="6_d6owg"]
 
 [node name="ui" type="Control"]
 texture_filter = 1
@@ -56,7 +59,33 @@ grow_vertical = 2
 texture = ExtResource("2_5fqma")
 expand_mode = 1
 
-[node name="hotbar" type="HBoxContainer" parent="."]
+[node name="hotbar" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -182.0
+offset_top = -50.0
+offset_right = 182.0
+offset_bottom = -6.0
+grow_horizontal = 2
+grow_vertical = 0
+script = ExtResource("4_lkym4")
+
+[node name="hotbar" type="TextureRect" parent="hotbar"]
 layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
+offset_right = 182.0
+offset_bottom = 22.0
+scale = Vector2(2, 2)
+texture = ExtResource("4_2mpcp")
+stretch_mode = 2
+
+[node name="selected" type="TextureRect" parent="hotbar"]
+layout_mode = 0
+offset_left = -2.0
+offset_top = -2.0
+offset_right = 46.0
+offset_bottom = 46.0
+texture = ExtResource("6_d6owg")
